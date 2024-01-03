@@ -25,6 +25,7 @@ let getdata = (req, res) => {
       reste,
       Datedujugement,
       Textedujugement,
+      users_id
     } = req.body;
   
     // Format date strings to 'YYYY-MM-DD' format
@@ -67,12 +68,12 @@ let getdata = (req, res) => {
         conclusion,
         Ledéfendeur,
         nomdudéfendeur,
-        'false', // Set the string value 'false' for "archives"
+        'false',
         honoraires,
         reste,
         formattedDatedujugement,
         Textedujugement,
-        1, // Assuming users_id is an int
+        users_id
       ],
       (err, result) => {
         if (err) {

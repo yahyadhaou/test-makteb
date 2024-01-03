@@ -4,12 +4,12 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const { email, pass } = req.body;
-    const name = "DHaou";
-    const lastname = "Admin yahya";
+    const { email, pass, } = req.body;
+    const name = "Dhaou";
+    const lastname = "yahya";
     const phone = "90620017";
-    const created_at = "2024-01-01"
- const role ="Admin"
+    const created_at = new Date().toISOString().split('T')[0];
+    const role ="Admin"
     const hashedpass = await bcrypt.hash(pass, 10);
 
     const sql =
