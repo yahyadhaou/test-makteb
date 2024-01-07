@@ -4,10 +4,21 @@ let getdata = (req, res) => {
     const id = req.params.id;
     const sql = `SELECT * from rappelles where users_id=?`;
     db.query(sql, [id], (err, result) => {
-      if (err) res.send(err);
-      else res.send(result);
+        if (err) {
+            res.send(err);
+        } else {
+            const sortedResult = result.sort((a, b) => b.idrappelles - a.idrappelles);
+            
+            // Filter the items with isUnRead==="false"
+            const unreadItems = sortedResult.filter(item => item.isUnRead === "false");
+            
+            // Get the first six items
+            const firstSixUnreadItems = unreadItems.slice(0, 6);
+            
+            res.send(firstSixUnreadItems);
+        }
     });
-  };
+};
 
   let insertrappellesdata = (req, res) => {
     let {
@@ -70,7 +81,28 @@ let getdata = (req, res) => {
       }
     });
   };
+  let isUnRead = (req, res) => {
+    const idrappelles = req.body.idrappelles; 
+    if (!idrappelles || !Array.isArray(idrappelles) || idrappelles.length === 0) {
+      return res.status(400).send("Invalid or empty array of idrappelles");
+    }
   
+    const sql = `UPDATE rappelles SET isUnRead = 'true' WHERE idrappelles IN (?)`;
+  
+    db.query(sql, [idrappelles], (err, result) => {
+      if (err) {
+        console.error("Error updating records:", err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        console.log(result);
+        if (result.changedRows > 0) {
+          res.send("Records updated successfully");
+        } else {
+          res.send("No matching records found");
+        }
+      }
+    });
+  };
 
 
 
@@ -78,4 +110,5 @@ let getdata = (req, res) => {
     getdata,
     insertrappellesdata,
     deleteRappelleById,
+    isUnRead
   };
